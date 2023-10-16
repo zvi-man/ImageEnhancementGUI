@@ -52,17 +52,11 @@ class DataAugmentationGUI(object):
                 st.subheader(aug_method.name)
                 st.radio(
                     f"Select {aug_method.name} Options",
-                    (AugMode.NotActive.name, AugMode.Active.name, AugMode.Random.name),
+                    (AugMode.NotActive.name, AugMode.Active.name),
                     key=f"{aug_method.name}, AugMode",
                     horizontal=True
                 )
                 aug_method.aug_mode = AugMode[st.session_state[f"{aug_method.name}, AugMode"]]
-                if aug_method.aug_mode == AugMode.Random:
-                    # Add probability of use input
-                    default_val = st.session_state[f"prob {aug_method.name} default val"]
-                    aug_method.use_aug_at_probability = float(
-                        st.number_input(f"Specify the probability of usage", value=default_val,
-                                        min_value=0.0, step=0.1, key=f"prob {aug_method.name}"))
                 if aug_method.aug_mode != AugMode.NotActive:
                     st.text("Select Augmentation Value")
                     for arg_name, arg_val in aug_method.func_args.items():
@@ -74,15 +68,6 @@ class DataAugmentationGUI(object):
                         # Make sure the given value is of the correct class
                         new_func_arg_val = aug_method.func_arg_type[arg_name](new_func_arg_val)
                         aug_method.func_args[arg_name] = new_func_arg_val
-
-                        if aug_method.aug_mode == AugMode.Random:
-                            default_val = st.session_state[f"{aug_method.name}, {arg_name} std default val"]
-                            new_func_arg_std = st.number_input(arg_name + "_std", value=default_val,
-                                                               min_value=min_value,
-                                                               step=step, key=f"{aug_method.name}, {arg_name} std")
-                            # Make sure the given value is of the correct class
-                            new_func_arg_std = aug_method.func_arg_type[arg_name](new_func_arg_std)
-                            aug_method.func_args_std[arg_name] = new_func_arg_std
                 st.write("##")
 
     def init_main_window(self) -> None:

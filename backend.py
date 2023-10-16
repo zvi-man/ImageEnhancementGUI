@@ -15,7 +15,6 @@ DELIMITER = "_"
 class AugMode(IntEnum):
     NotActive = 0
     Active = 1
-    Random = 2
 
 
 def get_true_on_probability(probability: float) -> bool:
